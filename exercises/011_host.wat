@@ -14,7 +14,7 @@
     (i32.mul (local.get 0) (local.get 0))
   )
 
-  (func $log_some_numbers 
+  (func $log_some_numbers
     (call $log (i32.const 1))
     (call $log (i32.const 42))
     (call $log (i32.const 88))

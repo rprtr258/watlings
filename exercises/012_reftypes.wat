@@ -1,5 +1,5 @@
 (;
-  In addition to the 4 number types, we also have 2 "ref" types: 
+  In addition to the 4 number types, we also have 2 "ref" types:
     - externref: any reference or null
     - funcref: a reference to a function or null
 
@@ -9,8 +9,8 @@
     - (ref.func $func_id): make a reference from a local function (only valid if function is in a table)
     - (ref.null extern/func): make a null reference for an extern or func
     - (ref.is_null $id): check if reference is currently null
-  
-  NOTE: You may come across "anyfunc" or "anyref" in the future. These are deprecated - ignore them. 
+
+  NOTE: You may come across "anyfunc" or "anyref" in the future. These are deprecated - ignore them.
 
   Call $send_extern_ref and $send_func_ref in $main
 ;)
@@ -21,7 +21,7 @@
 
   ;; import non-mutable externref and name it $global_extern_ref
   (import "env" "globalExternRef" (global $global_extern_ref externref))
-  
+
   ;; declare global funcref with initial value of null
   (global $global_func_ref funcref (ref.func $send_func_ref))
 

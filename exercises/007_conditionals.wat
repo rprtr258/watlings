@@ -2,12 +2,12 @@
   With conditional operators (e.g. if and select), 0 is false and non-zero is true.
 
   `if` takes 2 or 3 arguments. We will be writing it like this:
-    (if 
+    (if
       (VALUE_FOR_CONDITIONAL)
-      (then 
+      (then
         ;; if non-zero
       )
-      (else 
+      (else
         ;; if-zero
       )
     )
@@ -23,7 +23,7 @@
   If we want a value instead of an action, try `select`:
     (select (NON_ZERO_VALUE) (ZERO_VALUE) (CONDITIONAL))
 
-  It may be useful to use (return (VALUE)) at some point. 
+  It may be useful to use (return (VALUE)) at some point.
   This allows for early termination of a function.
 
   Finish the `getNum` function.
@@ -37,7 +37,7 @@
   )
 
   ;; build (select ...) using (if ...)
-  (func $custom_select 
+  (func $custom_select
     (param $if_value i32) (param $else_value i32) (param $conditional i32)
     (result i32)
 
@@ -45,7 +45,7 @@
 
     (if
       (local.get $conditional)
-      (then 
+      (then
         (local.set $return_value (local.get $if_value))
       )
       (else

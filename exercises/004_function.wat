@@ -19,7 +19,7 @@
   ;; A function that returns the number 42
   (func $get_num (result i32) (i32.const 42))
   ;; A function that returns the number it's given
-  (func $get_num_2 (param i32) (result i32) 
+  (func $get_num_2 (param i32) (result i32)
     (local.get 0)
   )
 

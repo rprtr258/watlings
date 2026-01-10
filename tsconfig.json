@@ -2,7 +2,36 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "nodenext",
-    "checkJs": true
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "checkJs": true,
+
+    // Balanced strictness - catch important errors without breaking code
+    "strict": false, // Disable strict mode to avoid many errors
+    "noImplicitAny": true, // Warn on implicit any
+    // "strictNullChecks": true, // Check for null/undefined
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": false,
+    "alwaysStrict": true,
+
+    // Code quality
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": false,
+    "noImplicitOverride": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+
+    // Module resolution
+    "moduleResolution": "nodenext",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
   },
-  "exclude": ["exercises/"]
+  "exclude": ["exercises/"],
 }

@@ -1,9 +1,8 @@
-
 <div align=center>
 
 # Watlings
 
-Learn the WebAssembly Text Format  
+Learn the WebAssembly Text Format
 by fixing a bunch of small programs!
 
 <br>
@@ -16,15 +15,11 @@ by fixing a bunch of small programs!
 
 </div>
 
-<br>
-
 ## Usage
 
-This project uses **[Node 23+]** & **[wasm-tools]** for compilation and testing.
+This project uses **[Bun]** & **[wasm-tools]** for compilation and testing.
 
 > **Note:** Later exercises (015+) use newer WebAssembly features like exception handling and GC types that require the `--experimental-wasm-exnref` flag, which is only available in Node.js 23 and later.
-
-<br>
 
 ```sh
 git clone git@github.com:EmNudge/watlings.git
@@ -36,24 +31,20 @@ Complete lessons by following the instructions in each exercise within the `exer
 Test your answer to an exercise with the `start` command:
 
 ```sh
-npm start 001_hello
+bun start 001_hello
 ```
-
-<br>
 
 If you'd like to view the solution to an exercise, use the `show` command:
 
 ```sh
-npm run show 001_hello
+bun run show 001_hello
 ```
 
 To apply it directly to the exercise, use `solve` instead of `show`:
 
 ```sh
-npm run solve 001_hello
+bun run solve 001_hello
 ```
-
-<br>
 
 ### Recommended Editor
 
@@ -71,17 +62,13 @@ Install `wasm-tools` and ensure `wasm-tools` is on your PATH. The scripts will i
 See install instructions: [wasm-tools][wasm-tools]
 
 
-<br>
-
 ## Motivations
 
-I've found just diving in to be the best way to build experience with programming. 
+I've found just diving in to be the best way to build experience with programming.
 
 **[Rustlings]** & **[Ziglings]** have both had tremendous returns to my journeys with both languages.
 
 WebAssembly (and by extension WAT) has a more sparse educational landscape than most and I was hoping to fill some of the gaps by building a project with the same sort of structure.
-
-<br>
 
 ## Pedagogical Philosophy
 
@@ -89,7 +76,7 @@ Outlined here are some thoughts on what makes a good teaching experience.
 
 ### Typing Over Reading
 
-The goal is to learn by doing. Comments on each file outline a task and some background. However, a lot about a language can be gleaned by its syntax alone. We should be adding **as little** explanation as possible. 
+The goal is to learn by doing. Comments on each file outline a task and some background. However, a lot about a language can be gleaned by its syntax alone. We should be adding **as little** explanation as possible.
 
 Occasional gaps in knowledge can be filled by consistent exposure to the syntax within different contexts. Certain things can therefore be learned without any mention.
 
@@ -105,8 +92,6 @@ This does not mean we should make the education itself elusive. We should not ma
 
 When introducing a lot of new syntax, keep the problem scope small, but force the user to read a bit. If the syntax is not new, increase the problem scope. Maybe many variations of the same task.
 
-<br>
-
 ## Credits
 
 - [rustlings](https://github.com/rust-lang/rustlings)
@@ -117,13 +102,11 @@ When introducing a lot of new syntax, keep the problem scope small, but force th
 
 [Example Exercise]:https://github.com/EmNudge/watlings/assets/24513691/a777c665-fd13-4422-a570-2d3669b0ee94
 
-[NPM WABT]: https://www.npmjs.com/package/wabt
 [VSCode]: https://code.visualstudio.com
 [wat-lsp]: https://marketplace.visualstudio.com/items?itemName=EmNudge.wat-lsp
 [WABT]: https://github.com/WebAssembly/wabt/releases/
 [wasm-tools]: https://github.com/bytecodealliance/wasm-tools
-[Node 23+]: https://nodejs.org/en
-[NPM]: https://www.npmjs.com/
+[Bun]: https://bun.com/
 
 [Roadmap]: https://github.com/users/EmNudge/projects/1
 

@@ -1,5 +1,5 @@
 (;
-  We often export and import when writing WASM. 
+  We often export and import when writing WASM.
   Here we import a function called $log_num that takes in one i32 as its only parameter
   We import it from the namespace "env" under the name "log" and call it $log_num locally
 

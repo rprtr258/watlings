@@ -1,0 +1,44 @@
+name: Exercises CI
+
+on:
+  push:
+    branches: ["*"]
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install deps
+        run: bun install
+
+      - name: Run typecheck
+        run: bun run tsc -p tsconfig.json
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install deps
+        run: bun install
+
+      - name: Install wasm-tools
+        run: |
+          wget https://github.com/bytecodealliance/wasm-tools/releases/download/v1.245.1/wasm-tools-1.245.1-x86_64-linux.tar.gz -O wasm-tools.tar.gz
+          tar xzf wasm-tools.tar.gz
+          sudo mv wasm-tools-*-x86_64-linux/wasm-tools /usr/local/bin/wasm-tools
+
+      - name: Verify exercises fail before patch and pass after
+        run: bun run test

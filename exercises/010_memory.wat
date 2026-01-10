@@ -4,7 +4,7 @@
   The host can write some input, call us, and then read the result.
 
   While we only have 32 and 64 bit numbers, we often deal in "bytes"
-  We store and retrieve bytes from our global memory block by using 
+  We store and retrieve bytes from our global memory block by using
     (i32.store8 (INDEX) (VALUE)) and (i32.load8_u (INDEX))
 
   Implement $double_data which doubles every integer in the memory range provided
@@ -23,9 +23,9 @@
 
     (loop $loop_name
       ;; mem[$index] = mem[$index] + 1
-      (i32.store8 
+      (i32.store8
         (local.get $index)
-        (i32.add 
+        (i32.add
           (i32.load8_u (local.get $index)) ;; mem[$index]
           (i32.const 1)
         )

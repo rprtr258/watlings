@@ -27,7 +27,7 @@
   (func $count_down (param $num i32)
     (loop $count_loop
       ;; $num = $num - 1
-      (local.set $num 
+      (local.set $num
         (i32.sub (local.get $num) (i32.const 1))
       )
 
@@ -48,16 +48,16 @@
       (block $break_loop
 
         (call $log_num (local.get $num))
-        
+
         ;; $num = $num + 1
-        (local.set $num 
+        (local.set $num
           (i32.add (local.get $num) (i32.const 1))
         )
 
         ;; exit early if $num === $end (do not log last number)
         (i32.eq (local.get $num) (local.get $end))
         (br_if $break_loop)
-        
+
         ;; loop again
         (br $count_loop)
         ;; NOTE: We obviously did not need `block` here. We could just use br_if for $count_loop.

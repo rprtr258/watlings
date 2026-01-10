@@ -5,7 +5,7 @@
     (elem $table_id (START_INDEX) val1 val2 val3 ...)
 
   We can index into a table with (table.get) and store with (table.set).
-  
+
   If our table contains funcrefs, we can call functions stored in the table directly with `call_indirect` using the syntax:
     (call_indirect $table_id (type $func_type) (TABLE_INDEX) arg1 ...)
 
