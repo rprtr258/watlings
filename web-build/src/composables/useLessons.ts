@@ -36,7 +36,7 @@ function navigateTo(chapterId: string, lessonId: string) {
 
   currentChapter.value = found.chapter;
   currentLesson.value = found.lesson;
-  window.history.pushState(null, "", `/${chapterId}/${lessonId}`);
+  // window.history.pushState(null, "", `/${chapterId}/${lessonId}`);
 }
 
 function getAdjacentLesson(direction: -1 | 1): Route | null {

@@ -5,9 +5,7 @@
 Learn the WebAssembly Text Format
 by fixing a bunch of small programs!
 
-<br>
-
-[![Button Roadmap]][Roadmap]
+**[Try it in your browser!][Web Version]**
 
 <br>
 
@@ -100,7 +98,7 @@ When introducing a lot of new syntax, keep the problem scope small, but force th
 
 <!----------------------------------------------------------------------------->
 
-[Example Exercise]:https://github.com/EmNudge/watlings/assets/24513691/a777c665-fd13-4422-a570-2d3669b0ee94
+[Example Exercise]: https://github.com/EmNudge/watlings/assets/24513691/a777c665-fd13-4422-a570-2d3669b0ee94
 
 [VSCode]: https://code.visualstudio.com
 [wat-lsp]: https://marketplace.visualstudio.com/items?itemName=EmNudge.wat-lsp
@@ -108,9 +106,7 @@ When introducing a lot of new syntax, keep the problem scope small, but force th
 [wasm-tools]: https://github.com/bytecodealliance/wasm-tools
 [Bun]: https://bun.com/
 
-[Roadmap]: https://github.com/users/EmNudge/projects/1
-
-[Button Roadmap]: https://img.shields.io/badge/Roadmap-19A974?style=for-the-badge&logoColor=white&logo=openstreetmap
+[Web Version]: https://rprtr258.github.io/watlings/
 
 [Rustlings]: https://github.com/rust-lang/rustlings
 [ziglings]: https://github.com/ratfactor/ziglings
