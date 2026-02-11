@@ -16,11 +16,15 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install deps
-        run: bun install
-
       - name: Run typecheck
-        run: bun run tsc -p tsconfig.json
+        run: |
+          bun ci
+          bun run tsc -p tsconfig.json
+
+          cd web-build
+          bun ci
+          bun run generate
+          bun run tsc -p tsconfig.json
 
   test:
     runs-on: ubuntu-latest
@@ -32,7 +36,7 @@ jobs:
           bun-version: latest
 
       - name: Install deps
-        run: bun install
+        run: bun ci
 
       - name: Install wasm-tools
         run: |

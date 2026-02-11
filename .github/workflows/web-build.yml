@@ -1,0 +1,47 @@
+name: Web Build CI
+
+on:
+  push:
+    branches: [master]
+    paths: [web-build/**, exercises/**, patch/**]
+  pull_request:
+    paths: [web-build/**, exercises/**, patch/**]
+
+defaults:
+  run:
+    working-directory: web-build
+
+jobs:
+  chapter-parity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Check exercise ↔ chapter parity
+        run: bun check-chapters.ts
+
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install deps
+        run: bun ci
+
+      - name: Generate lessons
+        run: bun run generate
+
+      - name: Check linting
+        run: bun run lint
+
+      - name: Type check
+        run: bun run typecheck
+
+      - name: Build
+        run: bun run build

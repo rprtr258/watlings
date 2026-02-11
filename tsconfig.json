@@ -33,5 +33,5 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
   },
-  "exclude": ["exercises/"],
+  "exclude": ["exercises/", "web-build/"],
 }
