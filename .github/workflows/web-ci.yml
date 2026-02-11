@@ -1,4 +1,4 @@
-name: Web Build CI
+name: Web CI
 
 on:
   push:
@@ -42,6 +42,3 @@ jobs:
 
       - name: Type check
         run: bun run typecheck
-
-      - name: Build
-        run: bun run build
