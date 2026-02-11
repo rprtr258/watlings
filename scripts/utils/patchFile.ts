@@ -5,7 +5,7 @@ import {patch} from "./patch.ts";
 import {findFile} from "./findFile.ts";
 import {colors} from "./colors.ts";
 
-export async function patchFile(stub: string = process.argv[2]): Promise<void> {
+export async function patchFile(stub = process.argv[2]): Promise<void> {
   const sourceFileNameWithExt = await findFile(stub, "patch");
   if (!sourceFileNameWithExt) {
     console.log(`No file matching ${stub} found in the exercises folder.`);

@@ -18,7 +18,6 @@ test("can run all tests", async () => {
       name: fileName,
     }));
 
-
   for (const { path, name } of testFiles) {
     console.log(`running "${name}":`);
     await import(path);

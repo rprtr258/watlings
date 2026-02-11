@@ -1,11 +1,11 @@
 #!/usr/bin/env bun
 /**
- * Standalone parity check: ensures every exercise on disk is listed in
- * CHAPTERS and every CHAPTERS entry exists on disk.
- *
- * Usage:  bun web-build/check-chapters.ts
- * Exit 1 on mismatch, 0 on success.
- */
+  * Standalone parity check: ensures every exercise on disk is listed in
+  * CHAPTERS and every CHAPTERS entry exists on disk.
+  *
+  * Usage:  bun web-build/check-chapters.ts
+  * Exit 1 on mismatch, 0 on success.
+  */
 
 import path from "path";
 import {fileURLToPath} from "url";

@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from "vue";
-import type { ConsoleLine, TestResult } from "./types";
-import { useLessons } from "./composables/useLessons";
-import { isCompleted, markCompleted, hashCode, saveDraft, loadDraft } from "./progress";
-import { runTests, runHostPreview } from "./runner";
-import { fireCelebration } from "./confetti";
+import {ref, computed, watch, nextTick, onMounted, onBeforeUnmount} from "vue";
+import type {ConsoleLine, TestResult} from "./types";
+import {useLessons} from "./composables/useLessons";
+import {markCompleted, hashCode, saveDraft, loadDraft} from "./progress";
+import {runTests, runHostPreview} from "./runner";
+import {fireCelebration} from "./confetti";
 import Sidebar from "./components/Sidebar.vue";
 import WatEditor from "./components/WatEditor.vue";
 import JsEditor from "./components/JsEditor.vue";
 
-const { data, currentChapter, currentLesson, navigateTo, getAdjacentLesson } = useLessons();
+const {data, currentChapter, currentLesson, navigateTo, getAdjacentLesson} = useLessons();
 
 const sidebarCollapsed = ref(false);
 const editorRef = ref<InstanceType<typeof WatEditor>>();

@@ -16,7 +16,7 @@ function spawnPromise(command: string, args: readonly string[]): Promise<void> {
       rej(err);
     });
   });
-};
+}
 
 export async function getWastParser(): Promise<(filePath: string) => Promise<void>> {
   try {
@@ -37,3 +37,4 @@ export async function getWastParser(): Promise<(filePath: string) => Promise<voi
     process.exit(1);
   }
 }
+

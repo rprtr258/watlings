@@ -1,9 +1,9 @@
 /**
- * Generate lessons.json from watlings exercises.
- *
- * Reads exercises/*.wat, patch/*.patch, and tests/*.test.js from the parent
- * repo and produces src/lessons.json with pre-rendered HTML instructions.
- */
+  * Generate lessons.json from watlings exercises.
+  *
+  * Reads exercises/*.wat, patch/*.patch, and tests/*.test.js from the parent
+  * repo and produces src/lessons.json with pre-rendered HTML instructions.
+  */
 
 import fs from "fs/promises";
 import path from "path";
@@ -15,8 +15,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const OUTPUT = path.join(__dirname, "src", "lessons.json");
 
-// ── Extract instruction comment block from a .wat file ──────────────
-
+/**
+  * Extract instruction comment block from a .wat file
+  */
 function extractInstructions(watSource: string) {
   const match = watSource.match(/^\s*\(;([\s\S]*?);\)/);
   if (!match) return "";
@@ -52,8 +53,8 @@ function prettyTitle(name: string) {
 }
 
 /**
- * Simple instruction text to HTML
- */
+  * Simple instruction text to HTML
+  */
 function escapeHtml(s: string) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
@@ -121,8 +122,8 @@ function instructionsToHtml(text: string) {
 }
 
 /**
- * Transform host .ts file for browser execution
- */
+  * Transform host .ts file for browser execution
+  */
 function transformHostForBrowser(mjsSource: string) {
   let code = mjsSource;
 
@@ -152,8 +153,8 @@ function transformHostForBrowser(mjsSource: string) {
 }
 
 /**
- * Transform test for browser execution
- */
+  * Transform test for browser execution
+  */
 function transformTestForBrowser(testSource: string) {
   const hasWasm = testSource.includes("getWasm");
   let code = testSource;
@@ -190,8 +191,8 @@ type Lesson = {
 };
 
 /**
- * Main generation
- */
+  * Main generation
+  */
 async function main() {
   // Ensure every exercise in exercises/ is covered by CHAPTERS
   const { ok, missing, extra } = await checkChapters(path.join(ROOT, "exercises"));

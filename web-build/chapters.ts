@@ -1,8 +1,8 @@
 /**
- * Canonical chapter -> exercise mapping for the web build.
- *
- * Shared between generate.ts (build) and check-chapters.ts (CI).
- */
+  * Canonical chapter -> exercise mapping for the web build.
+  *
+  * Shared between generate.ts (build) and check-chapters.ts (CI).
+  */
 
 import fs from "fs/promises";
 import path from "path";
@@ -48,10 +48,10 @@ export const CHAPTERS = [
 ];
 
 /**
- * Verify every .wat file in exercisesDir appears in CHAPTERS (and vice-versa).
- * Returns { ok, missing, extra } where missing = on disk but not in CHAPTERS,
- * extra = in CHAPTERS but not on disk.
- */
+  * Verify every .wat file in exercisesDir appears in CHAPTERS (and vice-versa).
+  * Returns { ok, missing, extra } where missing = on disk but not in CHAPTERS,
+  * extra = in CHAPTERS but not on disk.
+  */
 export async function checkChapters(exercisesDir: string) {
   const allFiles = await fs.readdir(exercisesDir);
   const onDisk = new Set(
