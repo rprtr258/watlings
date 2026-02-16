@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "start": "bun --experimental-wasm-exnref scripts/test.ts",
-    "test": "bun --experimental-wasm-exnref scripts/ci-check.ts",
+    "test": "bun --experimental-wasm-exnref scripts/test.ts",
+    "ci:check": "bun --experimental-wasm-exnref scripts/ci-check.ts",
     "build": "bun scripts/build.ts",
     "solve": "bun scripts/solve.ts",
     "show": "bun scripts/show-solution.ts"

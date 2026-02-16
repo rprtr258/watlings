@@ -9,8 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: true
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -45,4 +43,4 @@ jobs:
           sudo mv wasm-tools-*-x86_64-linux/wasm-tools /usr/local/bin/wasm-tools
 
       - name: Verify exercises fail before patch and pass after
-        run: bun run test
+        run: bun run ci:check

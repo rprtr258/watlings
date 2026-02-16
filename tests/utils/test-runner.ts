@@ -18,7 +18,7 @@ let failMessage = "Some tests failed!";
 export const setSuccess = (message: string) => (successMessage = message);
 export const setFailure = (message: string) => (failMessage = message);
 
-const testResults: { name: string; errors: string[]; }[] = [];
+const testResults: {name: string, errors: string[]}[] = [];
 let lastTestResultId: string | number | NodeJS.Timeout;
 const scheduleTestResult = () => {
   clearTimeout(lastTestResultId);
@@ -28,7 +28,7 @@ const scheduleTestResult = () => {
       const marker = errors.length ? colors.red("✘") : colors.green("✓");
       console.log(`${marker} ${name}`);
       if (errors.length) {
-        console.log(errors.map((e: string) => `  · ${colors.red(e)}`).join("\n"));
+        console.log(errors.map(e => `  · ${colors.red(e)}`).join("\n"));
       }
     }
 
@@ -76,6 +76,7 @@ export function arrayEquals<T>(a: T[], b: T[]) {
   return true;
 }
 
+/** @param {any} a @param {import('./types.d.ts').ObjectShape} b */
 export function matchObjectShape(a: any, b: ObjectShape) {
   if (typeof a !== "object" || typeof b !== "object") {
     return false;
