@@ -1,21 +1,10 @@
 import fs from "fs/promises";
-import {webcrypto} from "crypto";
 import {fileURLToPath} from "url";
 import {getWastParser} from "./getWastParser.ts";
 
 /**
- * Get SHA-1 hash of file - used for detecting updates
- */
-async function getSha1Hash(buffer: Buffer<ArrayBuffer>): Promise<string> {
-  const byteHash = await webcrypto.subtle.digest("SHA-1", buffer);
-  return Array.from(new Uint8Array(byteHash))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-};
-
-/**
- * Get list of files that have since been updated since last run
- * Also return files that do not have a corresponding build
+ * Get list of files that have been updated since last run
+ * Uses file modification times instead of SHA-1 hashes for better performance
  */
 async function getChangedFiles(files: string[]): Promise<string[]> {
   const cachePath = fileURLToPath(new URL("../../.cache/cache.txt", import.meta.url));
@@ -26,28 +15,41 @@ async function getChangedFiles(files: string[]): Promise<string[]> {
     await fs.mkdir(".cache");
   }
 
-  let contents = new Map<string, string>();
+  // Read cache: stores filename -> mtimeMs
+  let cache = new Map<string, number>();
   try {
-    const bytes = await fs.readFile(cachePath);
-    const fileText = new TextDecoder("utf-8").decode(bytes);
-    contents = new Map(
-      fileText
-        .split("\n")
-        .map((line): [string, string] => line.split(":") as [string, string])
+    const bytes = await fs.readFile(cachePath, 'utf-8');
+    cache = new Map(
+      bytes
+        .split('\n')
+        .filter(line => line.trim())
+        .map((line): [string, number] => {
+          const [name, mtimeStr] = line.split(':');
+          return [name, parseFloat(mtimeStr)];
+        })
     );
   } catch {}
 
-  const filePromises = files.map(async (name) => {
+  const changedFiles: string[] = [];
+
+  for (const name of files) {
     const path = fileURLToPath(new URL(`../../exercises/${name}`, import.meta.url));
-    const bytes = await fs.readFile(path);
-    return [name, await getSha1Hash(bytes)];
-  });
 
-  const fileHashes = await Promise.all(filePromises);
+    try {
+      const stats = await fs.stat(path);
+      const cachedMtime = cache.get(name);
 
-  return fileHashes
-    .filter(([name, hash]) => contents.get(name) !== hash)
-    .map(([name]) => name);
+      // File is changed if no cache entry or mtime is newer
+      if (!cachedMtime || stats.mtimeMs > cachedMtime) {
+        changedFiles.push(name);
+      }
+    } catch (error) {
+      // File doesn't exist or can't be read - treat as changed
+      changedFiles.push(name);
+    }
+  }
+
+  return changedFiles;
 }
 
 async function getFileNames(fileNameFilter?: string): Promise<string[]> {
@@ -99,10 +101,9 @@ export async function compileFiles(fileNameFilter: string | undefined = process.
     try {
       await parseWast(filePath);
 
-      // add WAT hash
-      const fileBytes = await fs.readFile(filePath);
-      const hash = await getSha1Hash(fileBytes);
-      cacheFileHandle.write(`${file}:${hash}\n`);
+      // Store file modification time in cache
+      const stats = await fs.stat(filePath);
+      cacheFileHandle.write(`${file}:${stats.mtimeMs}\n`);
       successCount++;
     } catch (e) {
       console.error(`Error at ${filePath}:`, e);

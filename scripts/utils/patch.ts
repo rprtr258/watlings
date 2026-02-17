@@ -1,59 +1,96 @@
 /**
- * We're reimplementing `patch` for use on Windows.
- * This may not be "spec compliant", but it should suffice for our use cases.
- *
- * Here's an unofficial syntax description:
- *
- * RANGE = num+ | num+ ',' num+
- * ACTION_CHAR = 'a' | 'c' | 'd'
- * ACTION_HEADER<T = ACTION_CHAR> = RANGE <T> RANGE
- * DEL_BODY = ( '<' text+ )+
- * ADD_BODY = ( '>' text+ )+
- * ACTION<T = ACTION_CHAR> =
- *  ACTION_HEADER<'c'> DEL_BODY '---' ADD_BODY
- *  | ACTION_HEADER<'d'> DEL_BODY
- *  | ACTION_HEADER<'a'> ADD_BODY
- * FILE = ACTION<T>+
+ * Simple patch implementation for unified diff format.
+ * Supports 'c' (change) and 'a' (add) operations.
+ * Format: "start,endcstart2" or "startcstart2" for changes
+ * Format: "startastart2" for additions (lines added after start)
+ * Example: "17c17", "22,23c22", "38a39,47"
  */
 
-// An attempt at a "readable" RegEx. This does not verify, only parse (possible false-positives).
-const PATCH_REGEX_SOURCE = [
-  /(?<srcRange>[0-9]+(?:,[0-9]+)?)/,  // RANGE
-  /(c|a|d)/,
-  /([0-9]+(?:,[0-9]+)?)/,            // RANGE
-  /(?<delLines>\n(?:<[^\n]+\n)+)?/,  // DEL_BODY
-  /(?:---)?/,
-  /(?<addLines>(?:\n>[^\n]*)+)?/,    // ADD_BODY
-].map(regex => regex.source).join("");
-const PATCH_REGEX = new RegExp(PATCH_REGEX_SOURCE, "g");
-
-export function parsePatch(patchString: string) {
-  return [...patchString.matchAll(PATCH_REGEX)].map(({ groups }) => {
-    const { srcRange, addLines, delLines } = groups;
-
-    const [start, end] = srcRange.split(",").map(Number);
-    const length = end ? end - (start - 1) : 1;
-    const lines = addLines?.trim().split("\n").map(line => line.slice(2)) ?? [];
-    return { start, deleteCount: length, addLines: lines, delLines };
-  })
+export function parsePatch(patchString: string): Array<{
+  start: number;
+  deleteCount: number;
+  addLines: string[];
+}> {
+  // Normalize line endings
+  patchString = patchString.replace(/\r\n/g, '\n').replace(/\r/g, '');
+  
+  const patches = [];
+  const lines = patchString.split('\n');
+  let i = 0;
+  
+  while (i < lines.length) {
+    const header = lines[i];
+    if (!header || !/[acd]/.test(header)) {
+      i++;
+      continue;
+    }
+    
+    // Parse header like "17c17", "22,23c22", or "38a39,47"
+    const match = header.match(/^(\d+)(?:,(\d+))?([acd])(\d+)(?:,(\d+))?$/);
+    if (!match) {
+      i++;
+      continue;
+    }
+    
+    const [, startStr, endStr, operation] = match;
+    const start = parseInt(startStr, 10);
+    const end = endStr ? parseInt(endStr, 10) : start;
+    
+    // Skip header
+    i++;
+    
+    // Collect deletion lines (start with '<') for 'c' and 'd' operations
+    const delLines: string[] = [];
+    if (operation === 'c' || operation === 'd') {
+      while (i < lines.length && lines[i].startsWith('<')) {
+        delLines.push(lines[i].substring(2)); // Remove '< ' prefix
+        i++;
+      }
+    }
+    
+    // Skip '---' separator if present (for 'c' operations)
+    if (operation === 'c' && i < lines.length && lines[i] === '---') {
+      i++;
+    }
+    
+    // Collect addition lines (start with '>') for 'c' and 'a' operations
+    const addLines: string[] = [];
+    if (operation === 'c' || operation === 'a') {
+      while (i < lines.length && lines[i].startsWith('>')) {
+        addLines.push(lines[i].substring(2)); // Remove '> ' prefix
+        i++;
+      }
+    }
+    
+    // For 'a' operation, deleteCount is 0 (just adding lines)
+    const deleteCount = operation === 'a' ? 0 : end - start + 1;
+    
+    patches.push({ start, deleteCount, addLines });
+  }
+  
+  return patches;
 }
 
 export function patch(patchString: string, targetString: string): string {
-  // Fix Windows inserting carriage returns
-  if (process.platform === "win32") {
-    targetString = targetString.replace(/\r/g, "");
-    patchString = patchString.replace(/\r/g, "");
-  }
-
-  const targetArr = targetString.split("\n");
-
-  for (const { delLines, addLines, deleteCount, start } of parsePatch(patchString)) {
-    if (delLines && !targetString.includes(delLines.slice(1).replace(/< /g, ""))) {
-      throw new Error("Patch contains deletion that does not exist in target");
+  // Normalize line endings
+  targetString = targetString.replace(/\r\n/g, '\n').replace(/\r/g, '');
+  patchString = patchString.replace(/\r\n/g, '\n').replace(/\r/g, '');
+  
+  const targetLines = targetString.split('\n');
+  const patches = parsePatch(patchString);
+  
+  // Apply patches in reverse order to maintain correct line numbers
+  patches.sort((a, b) => b.start - a.start);
+  
+  for (const { start, deleteCount, addLines } of patches) {
+    // Validate start is within bounds
+    if (start < 1 || start > targetLines.length + (deleteCount === 0 ? 1 : 0)) {
+      throw new Error(`Patch start line ${start} is out of bounds`);
     }
-
-    targetArr.splice(start - 1, deleteCount, ...addLines);
+    
+    // Apply the patch
+    targetLines.splice(start - 1, deleteCount, ...addLines);
   }
-
-  return targetArr.join("\n");
+  
+  return targetLines.join('\n');
 }

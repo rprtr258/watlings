@@ -1,5 +1,4 @@
 import {colors} from "../../scripts/utils/colors.ts";
-import {createContext, getContext} from "./errorContext.ts";
 
 type ObjectShape = {
   [key: string]:
@@ -19,11 +18,14 @@ export const setSuccess = (message: string) => (successMessage = message);
 export const setFailure = (message: string) => (failMessage = message);
 
 const testResults: { name: string; errors: string[]; }[] = [];
-let lastTestResultId: string | number | NodeJS.Timeout;
-const scheduleTestResult = () => {
-  clearTimeout(lastTestResultId);
+let reportScheduled = false;
 
-  lastTestResultId = setTimeout(() => {
+function scheduleReport() {
+  if (reportScheduled) return;
+  reportScheduled = true;
+
+  // Use setImmediate instead of setTimeout(0) for slightly better timing
+  setImmediate(() => {
     for (const { name, errors } of testResults) {
       const marker = errors.length ? colors.red("✘") : colors.green("✓");
       console.log(`${marker} ${name}`);
@@ -34,35 +36,38 @@ const scheduleTestResult = () => {
 
     console.log("----------------");
 
-    const isSuccess = testResults.every(({ errors }) => errors.length === 0);
-    if (successMessage && isSuccess) {
+    const allPassed = testResults.every(({ errors }) => errors.length === 0);
+    if (allPassed && successMessage) {
       console.log(successMessage);
-    } else if (failMessage && !isSuccess) {
+    } else if (!allPassed && failMessage) {
       console.log(failMessage);
       process.exitCode = 1;
     }
+
+    // Reset for next run
     testResults.length = 0;
-  }, 0);
-};
+    reportScheduled = false;
+  });
+}
 
 export async function test(name: string, fn: () => Promise<void> | void) {
-  const testResult = {name, errors: [] as any[]};
-  testResults.push(testResult);
+  const errors: string[] = [];
 
-  createContext(testResult.errors, async () => {
-    try {
-      await fn();
-    } catch (e) {
-      testResult.errors = [e.message];
-    } finally {
-      scheduleTestResult();
+  try {
+    await fn();
+  } catch (e) {
+    if (e instanceof Error && e.message) {
+      errors.push(e.message);
     }
-  });
+  }
+
+  testResults.push({ name, errors });
+  scheduleReport();
 }
 
 export function assert(boolExpression: boolean, errorMessage: string) {
   if (!boolExpression) {
-    getContext().push(errorMessage);
+    throw new Error(errorMessage);
   }
 }
 
